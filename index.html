@@ -1,22 +1,56 @@
 <!DOCTYPE html>
 <html lang="it">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Steelboard</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;700;900&family=Cormorant+SC:wght@600;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;700;900&family=Cormorant+SC:wght@600;700&display=swap" rel="stylesheet">
   <style>
+    /* ── CSS VARIABLES ───────────────────────────────────── */
+    :root {
+      --bg:           #000;
+      --bg-surface:   #070707;
+      --bg-elevated:  #080808;
+      --bg-subtle:    #030303;
+      --bg-input:     #000;
+      --border-s:     #333;
+      --border-m:     #222;
+      --border-xs:    #1a1a1a;
+      --border-inp:   #2e2e2e;
+      --t1:           #fff;
+      --t2:           #bbb;
+      --t3:           #aaa;
+      --tm:           #555;
+      --tf:           #2a2a2a;
+      --overlay:      rgba(0,0,0,0.9);
+    }
+    [data-theme="light"] {
+      --bg:           #f0ebe4;
+      --bg-surface:   #faf8f5;
+      --bg-elevated:  #fefcfa;
+      --bg-subtle:    #e8e2db;
+      --bg-input:     #fff;
+      --border-s:     #b0a89e;
+      --border-m:     #cec8c0;
+      --border-xs:    #ddd7ce;
+      --border-inp:   #c0b9b0;
+      --t1:           #1a1512;
+      --t2:           #3a3530;
+      --t3:           #5a5550;
+      --tm:           #8a8580;
+      --tf:           #c0b9b0;
+      --overlay:      rgba(30,25,20,0.85);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #000;
-      color: #fff;
+      background: var(--bg);
+      color: var(--t1);
       font-family: 'IM Fell English', serif;
       min-height: 100vh;
       overflow-x: auto;
+      transition: background 0.2s, color 0.2s;
     }
 
     /* ── HEADER ─────────────────────────────────────────── */
@@ -24,96 +58,80 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.6rem 2.5rem 1.4rem;
-      border-bottom: 1px solid #333;
+      padding: 1.3rem 2.5rem;
+      border-bottom: 1px solid var(--border-s);
       gap: 1rem;
       flex-wrap: wrap;
+      background: var(--bg);
     }
 
-    .header-actions {
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .header-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
 
     .btn {
       font-family: 'Cinzel', serif;
-      font-size: 0.68rem;
+      font-size: 0.63rem;
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      padding: 0.5rem 1.1rem;
+      padding: 0.42rem 0.9rem;
       border-radius: 2px;
       cursor: pointer;
       transition: all 0.15s;
     }
-
-    .btn-solid {
-      background: #fff;
-      border: 1px solid #fff;
-      color: #000;
-    }
-
-    .btn-solid:hover { background: #ddd; border-color: #ddd; }
+    .btn-solid { background: var(--t1); border: 1px solid var(--t1); color: var(--bg); }
+    .btn-solid:hover { opacity: 0.85; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border-s); color: var(--tm); }
+    .btn-ghost:hover { border-color: var(--t3); color: var(--t1); }
 
     /* ── FILTER BAR ──────────────────────────────────────── */
     .filter-bar {
       display: flex;
       align-items: center;
-      gap: 1.2rem;
-      padding: 0.7rem 2.5rem;
-      border-bottom: 1px solid #1a1a1a;
+      gap: 1.1rem;
+      padding: 0.55rem 2.5rem;
+      border-bottom: 1px solid var(--border-xs);
       flex-wrap: wrap;
-      background: #030303;
+      background: var(--bg-subtle);
     }
-
     .filter-search input {
-      background: #000;
-      border: 1px solid #2a2a2a;
-      color: #ccc;
+      background: var(--bg-input);
+      border: 1px solid var(--border-inp);
+      color: var(--t1);
       font-family: 'IM Fell English', serif;
-      font-size: 0.85rem;
-      padding: 0.35rem 0.7rem;
+      font-size: 0.84rem;
+      padding: 0.28rem 0.65rem;
       outline: none;
-      width: 180px;
+      width: 172px;
       transition: border-color 0.15s;
+      border-radius: 0;
     }
+    .filter-search input:focus { border-color: var(--tm); }
+    .filter-search input::placeholder { color: var(--tf); }
 
-    .filter-search input:focus { border-color: #555; }
-    .filter-search input::placeholder { color: #444; }
-
-    .filter-group {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
+    .filter-group { display: flex; align-items: center; gap: 0.3rem; }
     .filter-label {
       font-family: 'Cinzel', serif;
-      font-size: 0.58rem;
+      font-size: 0.53rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: #444;
+      color: var(--tf);
     }
-
     .filter-chip {
       font-family: 'Cinzel', serif;
-      font-size: 0.58rem;
+      font-size: 0.53rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 0.2rem 0.55rem;
-      border: 1px solid #2a2a2a;
+      padding: 0.16rem 0.45rem;
+      border: 1px solid var(--border-xs);
       background: transparent;
-      color: #555;
+      color: var(--tm);
       cursor: pointer;
       transition: all 0.12s;
       border-radius: 2px;
     }
-
-    .filter-chip:hover { border-color: #666; color: #aaa; }
-    .filter-chip.active { border-color: #666; color: #ccc; background: #111; }
-    .filter-chip.chip-alta.active { border-color: #d47a7a; color: #d47a7a; background: rgba(180,60,60,0.1); }
+    .filter-chip:hover { border-color: var(--tm); color: var(--t3); }
+    .filter-chip.active { border-color: var(--tm); color: var(--t2); background: var(--bg-surface); }
+    .filter-chip.chip-alta.active  { border-color: #d47a7a; color: #d47a7a; background: rgba(180,60,60,0.1); }
     .filter-chip.chip-media.active { border-color: #c9a84c; color: #c9a84c; background: rgba(201,168,76,0.1); }
     .filter-chip.chip-bassa.active { border-color: #6ab882; color: #6ab882; background: rgba(58,122,80,0.1); }
 
@@ -122,37 +140,31 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1px;
-      background: #1a1a1a;
-      border-top: 1px solid #1a1a1a;
-      min-height: calc(100vh - 140px);
+      background: var(--border-xs);
+      min-height: calc(100vh - 138px);
     }
 
     /* ── COLUMN ─────────────────────────────────────────── */
     .column {
-      background: #000;
+      background: var(--bg);
       display: flex;
       flex-direction: column;
-      min-height: calc(100vh - 141px);
+      min-height: calc(100vh - 139px);
       transition: background 0.15s;
     }
-
     .column[data-col="todo"]       { border-top: 2px solid #4a7fb5; }
     .column[data-col="inprogress"] { border-top: 2px solid #c9a84c; }
     .column[data-col="test"]       { border-top: 2px solid #7b5ea7; }
     .column[data-col="done"]       { border-top: 2px solid #3a7a50; }
-    .column.drag-over              { background: #0c0c0c; }
+    .column.drag-over              { background: var(--bg-surface); }
 
     .column-header {
-      padding: 1.1rem 1.2rem 0.9rem;
-      border-bottom: 1px solid #1a1a1a;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 1rem 1.2rem 0.8rem;
+      border-bottom: 1px solid var(--border-xs);
+      display: flex; align-items: center; justify-content: space-between;
     }
-
     .column-title-wrap { display: flex; align-items: center; gap: 0.6rem; }
     .col-line { width: 18px; height: 1px; }
-
     .column[data-col="todo"]       .col-line { background: #4a7fb5; }
     .column[data-col="inprogress"] .col-line { background: #c9a84c; }
     .column[data-col="test"]       .col-line { background: #7b5ea7; }
@@ -161,544 +173,219 @@
     .column-name {
       font-family: 'Cinzel', serif;
       font-weight: 700;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
     }
-
     .column[data-col="todo"]       .column-name { color: #7aabde; }
     .column[data-col="inprogress"] .column-name { color: #c9a84c; }
     .column[data-col="test"]       .column-name { color: #b08ad4; }
     .column[data-col="done"]       .column-name { color: #6ab882; }
 
     .col-header-right { display: flex; align-items: center; gap: 0.5rem; }
-
-    .column-count {
-      font-family: 'Cinzel', serif;
-      font-size: 0.62rem;
-      color: #555;
-      letter-spacing: 0.05em;
-    }
-
+    .column-count { font-family: 'Cinzel', serif; font-size: 0.6rem; color: var(--tm); letter-spacing: 0.05em; }
     .col-add-btn {
-      background: none;
-      border: 1px solid #333;
-      color: #555;
-      cursor: pointer;
-      font-size: 0.9rem;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 2px;
-      transition: color 0.1s, border-color 0.1s;
-      line-height: 1;
+      background: none; border: 1px solid var(--border-m); color: var(--tm);
+      cursor: pointer; font-size: 0.9rem; width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 2px; transition: color 0.1s, border-color 0.1s; line-height: 1;
     }
-
-    .col-add-btn:hover { color: #fff; border-color: #fff; }
+    .col-add-btn:hover { color: var(--t1); border-color: var(--t1); }
 
     /* ── CARDS ───────────────────────────────────────────── */
-    .cards-container {
-      padding: 0.8rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
+    .cards-container { padding: 0.8rem; flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
 
     .card {
-      border: 1px solid #222;
-      background: #070707;
-      padding: 0.85rem 0.95rem;
+      border: 1px solid var(--border-m);
+      background: var(--bg-surface);
+      padding: 0.78rem 0.88rem;
       cursor: grab;
       transition: border-color 0.15s, transform 0.15s;
       animation: cardIn 0.2s ease;
     }
-
     @keyframes cardIn {
-      from { opacity: 0; transform: translateY(-5px); }
+      from { opacity: 0; transform: translateY(-4px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    .card:hover { border-color: #555; transform: translateY(-1px); }
+    .card:hover { border-color: var(--tm); transform: translateY(-1px); }
     .card.dragging { opacity: 0.3; cursor: grabbing; }
 
-    .card-header-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 0.5rem;
-      margin-bottom: 0.4rem;
-    }
+    .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.32rem; }
+    .card-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.76rem; line-height: 1.5; letter-spacing: 0.04em; color: var(--t1); word-break: break-word; flex: 1; }
 
-    .card-title {
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      font-size: 0.78rem;
-      line-height: 1.5;
-      letter-spacing: 0.04em;
-      color: #fff;
-      word-break: break-word;
-      flex: 1;
-    }
+    .priority-badge { font-family: 'Cinzel', serif; font-size: 0.49rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.09rem 0.36rem; border-radius: 2px; flex-shrink: 0; }
+    .priority-alta  { color: #d47a7a; border: 1px solid rgba(212,122,122,0.5); background: rgba(180,60,60,0.12); }
+    .priority-media { color: #c9a84c; border: 1px solid rgba(201,168,76,0.5);  background: rgba(201,168,76,0.12); }
+    .priority-bassa { color: #6ab882; border: 1px solid rgba(106,184,130,0.5); background: rgba(58,122,80,0.12); }
 
-    /* ── PRIORITY BADGE ──────────────────────────────────── */
-    .priority-badge {
-      font-family: 'Cinzel', serif;
-      font-size: 0.52rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.1rem 0.4rem;
-      border-radius: 2px;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
+    .card-desc { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.87rem; color: var(--t2); line-height: 1.5; word-break: break-word; margin-bottom: 0.42rem; }
 
-    .priority-alta   { color: #d47a7a; border: 1px solid rgba(212,122,122,0.5); background: rgba(180,60,60,0.12); }
-    .priority-media  { color: #c9a84c; border: 1px solid rgba(201,168,76,0.5);  background: rgba(201,168,76,0.12); }
-    .priority-bassa  { color: #6ab882; border: 1px solid rgba(106,184,130,0.5); background: rgba(58,122,80,0.12); }
+    /* TAGS */
+    .card-tags { display: flex; flex-wrap: wrap; gap: 0.22rem; margin-bottom: 0.38rem; }
+    .card-tag { font-family: 'Cinzel', serif; font-size: 0.54rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.07rem 0.38rem; border: 1px solid var(--border-m); color: var(--tm); }
 
-    .card-desc {
-      font-family: 'IM Fell English', serif;
-      font-style: italic;
-      font-size: 0.88rem;
-      color: #bbb;
-      line-height: 1.5;
-      word-break: break-word;
-      margin-bottom: 0.5rem;
-    }
-
-    /* ── CHECKLIST ───────────────────────────────────────── */
-    .card-checklist {
-      margin-bottom: 0.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .check-item {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      cursor: pointer;
-      padding: 0.15rem 0;
-    }
-
-    .check-box {
-      width: 12px;
-      height: 12px;
-      border: 1px solid #444;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.55rem;
-      flex-shrink: 0;
-      transition: background 0.1s, border-color 0.1s;
-    }
-
+    /* CHECKLIST */
+    .card-checklist { margin-bottom: 0.42rem; display: flex; flex-direction: column; gap: 0.16rem; }
+    .check-item { display: flex; align-items: center; gap: 0.38rem; cursor: pointer; padding: 0.1rem 0; }
+    .check-box { width: 11px; height: 11px; border: 1px solid var(--border-s); display: flex; align-items: center; justify-content: center; font-size: 0.48rem; flex-shrink: 0; transition: background 0.1s, border-color 0.1s; }
     .check-item.done .check-box { background: #3a7a50; border-color: #3a7a50; color: #fff; }
+    .check-text { font-family: 'IM Fell English', serif; font-size: 0.81rem; color: var(--t3); }
+    .check-item.done .check-text { text-decoration: line-through; color: var(--tm); }
 
-    .check-text {
-      font-family: 'IM Fell English', serif;
-      font-size: 0.82rem;
-      color: #999;
-      transition: color 0.1s;
-    }
+    /* LINK */
+    .card-link { display: inline-block; font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.08em; color: #6ac8c8; text-decoration: none; margin-bottom: 0.38rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .card-link:hover { text-decoration: underline; }
 
-    .check-item.done .check-text { text-decoration: line-through; color: #555; }
+    /* COMMENTS HINT */
+    .card-comments-hint { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.08em; color: var(--tm); margin-bottom: 0.38rem; }
 
-    /* ── CARD LINK ───────────────────────────────────────── */
-    .card-link {
-      display: inline-block;
-      font-family: 'Cinzel', serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.08em;
-      color: #6ac8c8;
-      text-decoration: none;
-      margin-bottom: 0.5rem;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .card-link:hover { color: #8ee8e8; text-decoration: underline; }
-
-    /* ── CARD FOOTER ─────────────────────────────────────── */
-    .card-footer {
-      margin-top: 0.5rem;
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
-
-    .card-footer-left { display: flex; flex-direction: column; gap: 0.22rem; }
-
-    .card-tag {
-      font-family: 'Cinzel', serif;
-      font-size: 0.58rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #888;
-      border: 1px solid #333;
-      padding: 0.1rem 0.45rem;
-      display: inline-block;
-    }
-
-    .card-meta-text {
-      font-family: 'Cinzel', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.08em;
-      color: #aaa;
-    }
-
-    .card-footer-right {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.22rem;
-    }
-
-    .card-date {
-      font-family: 'Cinzel', serif;
-      font-size: 0.52rem;
-      letter-spacing: 0.08em;
-      color: #555;
-      white-space: nowrap;
-    }
-
-    .card-actions {
-      display: flex;
-      gap: 0.25rem;
-      opacity: 0;
-      transition: opacity 0.12s;
-    }
-
+    /* FOOTER */
+    .card-footer { margin-top: 0.42rem; display: flex; align-items: flex-end; justify-content: space-between; gap: 0.5rem; }
+    .card-footer-left { display: flex; flex-direction: column; gap: 0.18rem; }
+    .card-meta-text { font-family: 'Cinzel', serif; font-size: 0.51rem; letter-spacing: 0.08em; color: var(--t3); }
+    .card-footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.18rem; }
+    .card-date { font-family: 'Cinzel', serif; font-size: 0.49rem; letter-spacing: 0.07em; color: var(--tm); white-space: nowrap; }
+    .card-actions { display: flex; gap: 0.25rem; opacity: 0; transition: opacity 0.12s; }
     .card:hover .card-actions { opacity: 1; }
-
-    .card-btn {
-      background: none;
-      border: none;
-      color: #555;
-      cursor: pointer;
-      font-size: 0.72rem;
-      padding: 0.18rem 0.35rem;
-      transition: color 0.1s;
-    }
-
-    .card-btn:hover { color: #fff; }
+    .card-btn { background: none; border: none; color: var(--tm); cursor: pointer; font-size: 0.7rem; padding: 0.15rem 0.3rem; transition: color 0.1s; }
+    .card-btn:hover { color: var(--t1); }
     .card-btn.delete:hover { color: #c04040; }
 
-    .empty-col {
-      font-family: 'IM Fell English', serif;
-      font-style: italic;
-      color: #2a2a2a;
-      font-size: 0.85rem;
-      text-align: center;
-      padding: 2.5rem 1rem;
-    }
+    .empty-col { font-family: 'IM Fell English', serif; font-style: italic; color: var(--tf); font-size: 0.85rem; text-align: center; padding: 2.5rem 1rem; }
 
     /* ── MODAL ───────────────────────────────────────────── */
     .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.18s;
+      position: fixed; inset: 0; background: var(--overlay); z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.18s;
     }
-
     .modal-overlay.open { opacity: 1; pointer-events: all; }
 
     .modal {
-      background: #080808;
-      border: 1px solid #333;
-      width: 100%;
-      max-width: 440px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 2.2rem 2rem;
-      transform: translateY(10px);
-      transition: transform 0.2s;
-      position: relative;
+      background: var(--bg-elevated); border: 1px solid var(--border-s);
+      width: 100%; max-width: 460px; max-height: 90vh; overflow-y: auto;
+      padding: 1.9rem 1.8rem; transform: translateY(10px); transition: transform 0.2s; position: relative;
     }
-
     .modal-overlay.open .modal { transform: translateY(0); }
+    .modal::before, .modal::after { content: ''; position: absolute; width: 12px; height: 12px; border-color: var(--border-s); border-style: solid; }
+    .modal::before { top: 7px; left: 7px; border-width: 1px 0 0 1px; }
+    .modal::after  { bottom: 7px; right: 7px; border-width: 0 1px 1px 0; }
 
-    .modal::before, .modal::after {
-      content: '';
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      border-color: #444;
-      border-style: solid;
-    }
+    .modal-title { font-family: 'Cinzel', serif; font-size: 0.93rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; text-align: center; color: var(--t1); margin-bottom: 0.3rem; }
+    .modal-rule { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.1rem; }
+    .modal-rule::before, .modal-rule::after { content: ''; flex: 1; height: 1px; background: var(--border-xs); }
+    .modal-rule span { color: var(--tf); font-size: 0.5rem; letter-spacing: 0.4em; }
 
-    .modal::before { top: 8px; left: 8px; border-width: 1px 0 0 1px; }
-    .modal::after  { bottom: 8px; right: 8px; border-width: 0 1px 1px 0; }
-
-    .modal-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-align: center;
-      color: #fff;
-      margin-bottom: 0.3rem;
-    }
-
-    .modal-rule {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 1.4rem;
-    }
-
-    .modal-rule::before, .modal-rule::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #222;
-    }
-
-    .modal-rule span { color: #444; font-size: 0.5rem; letter-spacing: 0.4em; }
-
-    .form-group { margin-bottom: 0.9rem; }
-
-    .form-group label {
-      display: block;
-      font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #555;
-      margin-bottom: 0.4rem;
-    }
-
+    .form-group { margin-bottom: 0.82rem; }
+    .form-group label { display: block; font-family: 'Cinzel', serif; font-size: 0.57rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tm); margin-bottom: 0.32rem; }
     .form-group input,
     .form-group textarea,
     .form-group select {
-      width: 100%;
-      background: #000;
-      border: 1px solid #2e2e2e;
-      color: #fff;
-      font-family: 'IM Fell English', serif;
-      font-size: 1rem;
-      padding: 0.6rem 0.8rem;
-      outline: none;
-      transition: border-color 0.15s;
-      resize: vertical;
-      border-radius: 0;
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border-inp);
+      color: var(--t1); font-family: 'IM Fell English', serif; font-size: 0.95rem;
+      padding: 0.52rem 0.72rem; outline: none; transition: border-color 0.15s; resize: vertical; border-radius: 0;
     }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--tm); }
+    .form-group select option { background: var(--bg-elevated); }
 
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus { border-color: #666; }
+    /* TAGS IN MODAL */
+    .modal-tags-list { display: flex; flex-wrap: wrap; gap: 0.32rem; margin-bottom: 0.4rem; min-height: 0; }
+    .modal-tag-pill { display: flex; align-items: center; gap: 0.28rem; font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.1em; padding: 0.13rem 0.45rem; border: 1px solid var(--border-s); background: var(--bg-surface); color: var(--t2); }
+    .modal-tag-pill button { background: none; border: none; color: var(--tm); cursor: pointer; font-size: 0.58rem; padding: 0 0.1rem; line-height: 1; }
+    .modal-tag-pill button:hover { color: #d47a7a; }
 
-    .form-group select option { background: #080808; }
+    .tag-add-row { display: flex; gap: 0.38rem; align-items: center; }
+    .tag-add-row input { flex: 1; font-size: 0.9rem; padding: 0.42rem 0.62rem !important; }
+    .btn-add-tag { font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.1em; background: transparent; border: 1px solid var(--border-s); color: var(--tm); padding: 0.42rem 0.62rem; cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+    .btn-add-tag:hover { border-color: var(--t3); color: var(--t2); }
 
-    /* ── CHECKLIST in MODAL ──────────────────────────────── */
-    .modal-checklist-items {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .modal-check-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.3rem 0;
-      border-bottom: 1px solid #161616;
-    }
-
-    .modal-check-row span {
-      flex: 1;
-      font-family: 'IM Fell English', serif;
-      font-size: 0.92rem;
-      color: #ccc;
-    }
-
-    .modal-check-del {
-      background: none;
-      border: none;
-      color: #444;
-      cursor: pointer;
-      font-size: 0.7rem;
-      padding: 0.1rem 0.3rem;
-      transition: color 0.1s;
-    }
-
+    /* CHECKLIST IN MODAL */
+    .modal-checklist-items { display: flex; flex-direction: column; gap: 0.22rem; margin-bottom: 0.38rem; }
+    .modal-check-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.26rem 0; border-bottom: 1px solid var(--border-xs); }
+    .modal-check-row span { flex: 1; font-family: 'IM Fell English', serif; font-size: 0.9rem; color: var(--t2); }
+    .modal-check-del { background: none; border: none; color: var(--tm); cursor: pointer; font-size: 0.63rem; padding: 0.1rem 0.28rem; transition: color 0.1s; }
     .modal-check-del:hover { color: #d47a7a; }
 
-    .checklist-add-row {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.3rem;
-    }
+    .checklist-add-row { display: flex; gap: 0.38rem; margin-top: 0.28rem; }
+    .checklist-add-row input { flex: 1; font-size: 0.9rem; padding: 0.4rem 0.58rem !important; }
+    .btn-add-check { font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.1em; background: transparent; border: 1px solid var(--border-s); color: var(--tm); padding: 0.4rem 0.62rem; cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+    .btn-add-check:hover { border-color: var(--t3); color: var(--t2); }
 
-    .checklist-add-row input {
-      flex: 1;
-      background: #000;
-      border: 1px solid #2a2a2a;
-      color: #fff;
-      font-family: 'IM Fell English', serif;
-      font-size: 0.9rem;
-      padding: 0.45rem 0.6rem;
-      outline: none;
-      border-radius: 0;
-    }
+    /* COMMENTS */
+    .modal-section-divider { height: 1px; background: var(--border-xs); margin: 1rem 0 0.8rem; }
+    .modal-section-label { font-family: 'Cinzel', serif; font-size: 0.57rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--tm); margin-bottom: 0.65rem; }
 
-    .checklist-add-row input:focus { border-color: #555; }
+    .comment-list { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 0.6rem; }
+    .comment-item { background: var(--bg-subtle); border: 1px solid var(--border-xs); padding: 0.48rem 0.62rem; }
+    .comment-header { display: flex; justify-content: space-between; margin-bottom: 0.18rem; }
+    .comment-author { font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.1em; color: var(--t3); }
+    .comment-time   { font-family: 'Cinzel', serif; font-size: 0.5rem; color: var(--tm); }
+    .comment-text   { font-family: 'IM Fell English', serif; font-size: 0.87rem; color: var(--t2); line-height: 1.5; }
+    .comment-empty  { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.85rem; color: var(--tm); padding: 0.2rem 0 0.4rem; }
 
-    .btn-add-check {
-      font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      background: transparent;
-      border: 1px solid #333;
-      color: #777;
-      padding: 0.45rem 0.7rem;
-      cursor: pointer;
-      transition: all 0.12s;
-      white-space: nowrap;
-    }
+    .comment-add-row { display: flex; gap: 0.38rem; align-items: flex-end; }
+    .comment-add-row textarea { flex: 1; font-size: 0.9rem; padding: 0.42rem 0.62rem !important; resize: none; min-height: 56px; }
+    .btn-add-comment { font-family: 'Cinzel', serif; font-size: 0.54rem; letter-spacing: 0.1em; background: transparent; border: 1px solid var(--border-s); color: var(--tm); padding: 0.42rem 0.7rem; cursor: pointer; transition: all 0.12s; white-space: nowrap; }
+    .btn-add-comment:hover { border-color: var(--t3); color: var(--t2); }
 
-    .btn-add-check:hover { border-color: #888; color: #ccc; }
+    /* MODAL ACTIONS */
+    .modal-actions { display: flex; gap: 0.7rem; margin-top: 1.1rem; }
+    .btn-modal-primary { flex: 1; font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.67rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.7rem; cursor: pointer; background: var(--t1); border: 1px solid var(--t1); color: var(--bg); transition: opacity 0.15s; border-radius: 0; }
+    .btn-modal-primary:hover { opacity: 0.85; }
+    .btn-modal-cancel { font-family: 'Cinzel', serif; font-size: 0.63rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.7rem 1.05rem; cursor: pointer; background: transparent; border: 1px solid var(--border-inp); color: var(--tm); transition: color 0.15s, border-color 0.15s; border-radius: 0; }
+    .btn-modal-cancel:hover { color: var(--t1); border-color: var(--tm); }
 
-    /* ── MODAL ACTIONS ───────────────────────────────────── */
-    .modal-actions {
-      display: flex;
-      gap: 0.7rem;
-      margin-top: 1.4rem;
-    }
-
-    .btn-modal-primary {
-      flex: 1;
-      font-family: 'Cinzel', serif;
-      font-weight: 700;
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      padding: 0.75rem;
-      cursor: pointer;
-      background: #fff;
-      border: 1px solid #fff;
-      color: #000;
-      transition: background 0.15s;
-      border-radius: 0;
-    }
-
-    .btn-modal-primary:hover { background: #ddd; }
-
-    .btn-modal-cancel {
-      font-family: 'Cinzel', serif;
-      font-size: 0.68rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.75rem 1.1rem;
-      cursor: pointer;
-      background: transparent;
-      border: 1px solid #2e2e2e;
-      color: #555;
-      transition: color 0.15s, border-color 0.15s;
-      border-radius: 0;
-    }
-
-    .btn-modal-cancel:hover { color: #fff; border-color: #555; }
-
-    /* ── CONFIRM MODAL ───────────────────────────────────── */
-    .confirm-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 300;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s;
-    }
-
+    /* ── CONFIRM ─────────────────────────────────────────── */
+    .confirm-overlay { position: fixed; inset: 0; background: var(--overlay); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
     .confirm-overlay.open { opacity: 1; pointer-events: all; }
-
-    .confirm-box {
-      background: #090909;
-      border: 1px solid #333;
-      padding: 1.8rem 2rem;
-      max-width: 320px;
-      width: 100%;
-      text-align: center;
-      position: relative;
-    }
-
-    .confirm-box::before, .confirm-box::after {
-      content: '';
-      position: absolute;
-      width: 10px; height: 10px;
-      border-color: #333; border-style: solid;
-    }
-
-    .confirm-box::before { top: 6px; left: 6px; border-width: 1px 0 0 1px; }
-    .confirm-box::after  { bottom: 6px; right: 6px; border-width: 0 1px 1px 0; }
-
-    .confirm-text {
-      font-family: 'Cinzel', serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      color: #ccc;
-      margin-bottom: 1.4rem;
-      line-height: 1.6;
-    }
-
-    .confirm-actions { display: flex; gap: 0.6rem; justify-content: center; }
-
-    .btn-confirm-yes {
-      font-family: 'Cinzel', serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.55rem 1.2rem;
-      background: #8b0000;
-      border: 1px solid #c04040;
-      color: #ffaaaa;
-      cursor: pointer;
-      transition: background 0.12s;
-      border-radius: 0;
-    }
-
+    .confirm-box { background: var(--bg-elevated); border: 1px solid var(--border-s); padding: 1.7rem 1.9rem; max-width: 308px; width: 100%; text-align: center; }
+    .confirm-text { font-family: 'Cinzel', serif; font-size: 0.7rem; letter-spacing: 0.1em; color: var(--t2); margin-bottom: 1.2rem; line-height: 1.7; }
+    .confirm-actions { display: flex; gap: 0.55rem; justify-content: center; }
+    .btn-confirm-yes { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.48rem 1.1rem; background: #8b0000; border: 1px solid #c04040; color: #ffaaaa; cursor: pointer; border-radius: 0; }
     .btn-confirm-yes:hover { background: #a00000; }
+    .btn-confirm-no  { font-family: 'Cinzel', serif; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.48rem 1.1rem; background: transparent; border: 1px solid var(--border-inp); color: var(--tm); cursor: pointer; border-radius: 0; }
+    .btn-confirm-no:hover { color: var(--t1); border-color: var(--tm); }
 
-    .btn-confirm-no {
-      font-family: 'Cinzel', serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.55rem 1.2rem;
-      background: transparent;
-      border: 1px solid #2e2e2e;
-      color: #666;
-      cursor: pointer;
-      transition: color 0.12s, border-color 0.12s;
-      border-radius: 0;
+    /* ── LOG DRAWER ──────────────────────────────────────── */
+    .log-drawer {
+      position: fixed; top: 0; right: -360px; width: 340px; height: 100vh;
+      background: var(--bg-elevated); border-left: 1px solid var(--border-s);
+      z-index: 250; display: flex; flex-direction: column; transition: right 0.25s ease;
     }
+    .log-drawer.open { right: 0; }
+    .log-drawer-header { padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--border-xs); display: flex; justify-content: space-between; align-items: center; }
+    .log-drawer-title { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--t1); }
+    .log-close { background: none; border: none; color: var(--tm); cursor: pointer; font-size: 0.9rem; padding: 0.2rem 0.4rem; transition: color 0.1s; }
+    .log-close:hover { color: var(--t1); }
+    .log-list { flex: 1; overflow-y: auto; padding: 0.75rem 1.3rem; display: flex; flex-direction: column; gap: 0; }
+    .log-entry { padding: 0.45rem 0; border-bottom: 1px solid var(--border-xs); display: flex; flex-direction: column; gap: 0.12rem; }
+    .log-time { font-family: 'Cinzel', serif; font-size: 0.5rem; letter-spacing: 0.1em; color: var(--tm); }
+    .log-text { font-family: 'IM Fell English', serif; font-size: 0.87rem; color: var(--t2); }
+    .log-empty { font-family: 'IM Fell English', serif; font-style: italic; color: var(--tf); font-size: 0.85rem; text-align: center; padding: 2rem; }
 
-    .btn-confirm-no:hover { color: #fff; border-color: #555; }
+    /* ── ARCHIVE MODAL ───────────────────────────────────── */
+    .archive-overlay { position: fixed; inset: 0; background: var(--overlay); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.18s; }
+    .archive-overlay.open { opacity: 1; pointer-events: all; }
+    .archive-modal { background: var(--bg-elevated); border: 1px solid var(--border-s); width: 100%; max-width: 660px; max-height: 82vh; display: flex; flex-direction: column; }
+    .archive-header { padding: 1.4rem 1.8rem; border-bottom: 1px solid var(--border-xs); display: flex; justify-content: space-between; align-items: center; }
+    .archive-title { font-family: 'Cinzel', serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--t1); }
+    .archive-subtitle { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.82rem; color: var(--tm); margin-top: 0.15rem; }
+    .archive-close { background: none; border: none; color: var(--tm); cursor: pointer; font-size: 1rem; transition: color 0.1s; }
+    .archive-close:hover { color: var(--t1); }
+    .archive-list { flex: 1; overflow-y: auto; padding: 0.9rem 1.4rem; display: flex; flex-direction: column; gap: 0.45rem; }
+    .archive-card { border: 1px solid var(--border-xs); background: var(--bg-surface); padding: 0.72rem 0.9rem; display: flex; align-items: center; gap: 0.9rem; }
+    .archive-card-info { flex: 1; }
+    .archive-card-title { font-family: 'Cinzel', serif; font-size: 0.73rem; color: var(--t1); letter-spacing: 0.05em; margin-bottom: 0.18rem; }
+    .archive-card-meta  { font-family: 'IM Fell English', serif; font-size: 0.81rem; color: var(--tm); font-style: italic; }
+    .btn-restore { font-family: 'Cinzel', serif; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.32rem 0.75rem; background: transparent; border: 1px solid var(--border-s); color: var(--tm); cursor: pointer; transition: all 0.12s; white-space: nowrap; border-radius: 0; }
+    .btn-restore:hover { border-color: var(--t3); color: var(--t2); }
+    .archive-empty { font-family: 'IM Fell English', serif; font-style: italic; color: var(--tf); font-size: 0.9rem; text-align: center; padding: 3rem; }
 
     @media (max-width: 900px) { .board { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 520px) {
       .board { grid-template-columns: 1fr; }
-      header { padding: 1rem; }
-      .filter-bar { padding: 0.7rem 1rem; }
+      header, .filter-bar { padding: 0.8rem 1rem; }
+      .log-drawer { width: 100%; right: -100%; }
     }
   </style>
 </head>
@@ -706,9 +393,12 @@
 <body>
 
   <header>
-    <span style="font-family:'Cormorant SC','Cormorant',Georgia,serif;font-size:2.6rem;font-weight:600;color:#fff;letter-spacing:0.05em;">Steelboard</span>
+    <span style="font-family:'Cormorant SC','Cormorant',Georgia,serif;font-size:2.5rem;font-weight:600;color:var(--t1);letter-spacing:0.05em;">Steelboard</span>
     <div class="header-actions">
-      <span id="syncStatus" style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.1em;color:#555;">○ Caricamento...</span>
+      <span id="syncStatus" style="font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.1em;color:var(--tm);">○ Caricamento...</span>
+      <button class="btn btn-ghost" onclick="openArchive()">⊡ Archivio</button>
+      <button class="btn btn-ghost" onclick="toggleLog()">≡ Log</button>
+      <button class="btn btn-ghost" id="themeBtn" onclick="toggleTheme()">☀ Chiaro</button>
       <button class="btn btn-solid" onclick="openModal()">+ Nuova Task</button>
     </div>
   </header>
@@ -720,67 +410,53 @@
     </div>
     <div class="filter-group">
       <span class="filter-label">Priorità:</span>
-      <button class="filter-chip active" id="fp-all"   onclick="setFilterPriority('')">Tutte</button>
-      <button class="filter-chip chip-alta"  id="fp-alta"  onclick="setFilterPriority('alta')">Alta</button>
-      <button class="filter-chip chip-media" id="fp-media" onclick="setFilterPriority('media')">Media</button>
-      <button class="filter-chip chip-bassa" id="fp-bassa" onclick="setFilterPriority('bassa')">Bassa</button>
+      <button class="filter-chip active"    id="fp-all"   onclick="setFilterPriority('')">Tutte</button>
+      <button class="filter-chip chip-alta" id="fp-alta"  onclick="setFilterPriority('alta')">Alta</button>
+      <button class="filter-chip chip-media"id="fp-media" onclick="setFilterPriority('media')">Media</button>
+      <button class="filter-chip chip-bassa"id="fp-bassa" onclick="setFilterPriority('bassa')">Bassa</button>
     </div>
     <div class="filter-group">
       <span class="filter-label">Autore:</span>
       <button class="filter-chip active" id="fa-all"   onclick="setFilterAuthor('')">Tutti</button>
-      <button class="filter-chip" id="fa-davi"  onclick="setFilterAuthor('Davi')">Davi</button>
-      <button class="filter-chip" id="fa-loris" onclick="setFilterAuthor('Loris')">Loris</button>
-      <button class="filter-chip" id="fa-merin" onclick="setFilterAuthor('Merin')">Merin</button>
+      <button class="filter-chip"        id="fa-davi"  onclick="setFilterAuthor('Davi')">Davi</button>
+      <button class="filter-chip"        id="fa-loris" onclick="setFilterAuthor('Loris')">Loris</button>
+      <button class="filter-chip"        id="fa-merin" onclick="setFilterAuthor('Merin')">Merin</button>
     </div>
   </div>
 
+  <!-- BOARD -->
   <div class="board" id="board">
     <div class="column" data-col="todo" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
       <div class="column-header">
         <div class="column-title-wrap"><div class="col-line"></div><span class="column-name">Da Fare</span></div>
-        <div class="col-header-right">
-          <span class="column-count" id="count-todo">0</span>
-          <button class="col-add-btn" onclick="openModal('todo')">+</button>
-        </div>
+        <div class="col-header-right"><span class="column-count" id="count-todo">0</span><button class="col-add-btn" onclick="openModal('todo')">+</button></div>
       </div>
       <div class="cards-container" id="cards-todo"></div>
     </div>
-
     <div class="column" data-col="inprogress" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
       <div class="column-header">
         <div class="column-title-wrap"><div class="col-line"></div><span class="column-name">In Corso</span></div>
-        <div class="col-header-right">
-          <span class="column-count" id="count-inprogress">0</span>
-          <button class="col-add-btn" onclick="openModal('inprogress')">+</button>
-        </div>
+        <div class="col-header-right"><span class="column-count" id="count-inprogress">0</span><button class="col-add-btn" onclick="openModal('inprogress')">+</button></div>
       </div>
       <div class="cards-container" id="cards-inprogress"></div>
     </div>
-
     <div class="column" data-col="test" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
       <div class="column-header">
         <div class="column-title-wrap"><div class="col-line"></div><span class="column-name">Test</span></div>
-        <div class="col-header-right">
-          <span class="column-count" id="count-test">0</span>
-          <button class="col-add-btn" onclick="openModal('test')">+</button>
-        </div>
+        <div class="col-header-right"><span class="column-count" id="count-test">0</span><button class="col-add-btn" onclick="openModal('test')">+</button></div>
       </div>
       <div class="cards-container" id="cards-test"></div>
     </div>
-
     <div class="column" data-col="done" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
       <div class="column-header">
         <div class="column-title-wrap"><div class="col-line"></div><span class="column-name">Fatto</span></div>
-        <div class="col-header-right">
-          <span class="column-count" id="count-done">0</span>
-          <button class="col-add-btn" onclick="openModal('done')">+</button>
-        </div>
+        <div class="col-header-right"><span class="column-count" id="count-done">0</span><button class="col-add-btn" onclick="openModal('done')">+</button></div>
       </div>
       <div class="cards-container" id="cards-done"></div>
     </div>
   </div>
 
-  <!-- MODAL CREA/MODIFICA -->
+  <!-- TASK MODAL -->
   <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
     <div class="modal">
       <div class="modal-title" id="modalTitle">Nuova Task</div>
@@ -829,23 +505,43 @@
           <option value="Merin">Merin</option>
         </select>
       </div>
+
+      <!-- TAGS -->
       <div class="form-group">
-        <label>Tag &amp; Colore</label>
-        <div style="display:flex;gap:0.5rem;align-items:center;">
-          <input type="text" id="inputTag" placeholder="Es. arte, regole, lore..." maxlength="20" style="flex:1">
-          <div id="colorSwatches" style="display:flex;gap:0.35rem;align-items:center;flex-shrink:0;"></div>
+        <label>Tag (max 3)</label>
+        <div class="modal-tags-list" id="modalTagsList"></div>
+        <div class="tag-add-row" id="tagAddRow">
+          <input type="text" id="inputTagText" placeholder="Testo tag..." maxlength="20"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();addTag();}">
+          <div id="tagColorSwatches" style="display:flex;gap:0.28rem;align-items:center;flex-shrink:0;"></div>
+          <button type="button" class="btn-add-tag" onclick="addTag()">+</button>
         </div>
       </div>
+
       <div class="form-group">
         <label>Link / URL</label>
         <input type="text" id="inputLink" placeholder="https://...">
       </div>
+
+      <!-- CHECKLIST -->
       <div class="form-group">
         <label>Checklist</label>
         <div class="modal-checklist-items" id="modalChecklistItems"></div>
         <div class="checklist-add-row">
-          <input type="text" id="inputCheckItem" placeholder="Aggiungi elemento..." onkeydown="if(event.key==='Enter'){event.preventDefault();addChecklistItem();}">
+          <input type="text" id="inputCheckItem" placeholder="Aggiungi elemento..."
+            onkeydown="if(event.key==='Enter'){event.preventDefault();addChecklistItem();}">
           <button type="button" class="btn-add-check" onclick="addChecklistItem()">+ Aggiungi</button>
+        </div>
+      </div>
+
+      <!-- COMMENTS (edit only) -->
+      <div id="commentsSection" style="display:none;">
+        <div class="modal-section-divider"></div>
+        <div class="modal-section-label">Commenti</div>
+        <div class="comment-list" id="commentList"></div>
+        <div class="comment-add-row">
+          <textarea id="inputComment" rows="2" placeholder="Scrivi un commento..."></textarea>
+          <button type="button" class="btn-add-comment" onclick="addComment()">Invia</button>
         </div>
       </div>
 
@@ -856,7 +552,7 @@
     </div>
   </div>
 
-  <!-- CONFIRM DELETE MODAL -->
+  <!-- CONFIRM DELETE -->
   <div class="confirm-overlay" id="confirmOverlay">
     <div class="confirm-box">
       <div class="confirm-text">Eliminare questa task?<br>L'operazione non può essere annullata.</div>
@@ -867,15 +563,42 @@
     </div>
   </div>
 
+  <!-- LOG DRAWER -->
+  <div class="log-drawer" id="logDrawer">
+    <div class="log-drawer-header">
+      <span class="log-drawer-title">Log Attività</span>
+      <button class="log-close" onclick="toggleLog()">✕</button>
+    </div>
+    <div class="log-list" id="logList"></div>
+  </div>
+
+  <!-- ARCHIVE MODAL -->
+  <div class="archive-overlay" id="archiveOverlay" onclick="closeArchiveOutside(event)">
+    <div class="archive-modal">
+      <div class="archive-header">
+        <div>
+          <div class="archive-title">Archivio</div>
+          <div class="archive-subtitle">Task in "Fatto" da oltre 7 giorni</div>
+        </div>
+        <button class="archive-close" onclick="closeArchive()">✕</button>
+      </div>
+      <div class="archive-list" id="archiveList"></div>
+    </div>
+  </div>
+
   <script>
-    const COLS = ['todo', 'inprogress', 'test', 'done'];
-    let tasks = [], editingId = null, draggedId = null;
+    const COLS        = ['todo', 'inprogress', 'test', 'done'];
+    const ARCHIVE_DAYS = 7;
+
+    let tasks = [], activityLog = [];
+    let editingId = null, draggedId = null;
     let filterSearch = '', filterPriority = '', filterAuthor = '';
     let pendingDeleteId = null;
-    let modalChecklist = [];
+    let modalChecklist = [], modalTags = [], newTagColor = 'none';
 
+    // ── TAG COLORS ─────────────────────────────────────────
     const TAG_COLORS = [
-      { id: 'none',   color: '#555',    bg: 'transparent' },
+      { id: 'none',   color: '#888',    bg: 'transparent' },
       { id: 'blue',   color: '#7aabde', bg: 'rgba(74,127,181,0.15)' },
       { id: 'gold',   color: '#c9a84c', bg: 'rgba(201,168,76,0.15)' },
       { id: 'purple', color: '#b08ad4', bg: 'rgba(123,94,167,0.15)' },
@@ -884,23 +607,76 @@
       { id: 'teal',   color: '#6ac8c8', bg: 'rgba(50,160,160,0.15)' },
       { id: 'orange', color: '#d4a46a', bg: 'rgba(180,130,60,0.15)' },
     ];
+    function getTagColor(id) { return TAG_COLORS.find(c => c.id === id) || TAG_COLORS[0]; }
 
-    let selectedTagColor = 'none';
+    // ── THEME ──────────────────────────────────────────────
+    function initTheme() {
+      document.body.dataset.theme = localStorage.getItem('sb_theme') || 'dark';
+      updateThemeBtn();
+    }
+    function toggleTheme() {
+      document.body.dataset.theme = document.body.dataset.theme === 'light' ? 'dark' : 'light';
+      localStorage.setItem('sb_theme', document.body.dataset.theme);
+      updateThemeBtn();
+    }
+    function updateThemeBtn() {
+      const btn = document.getElementById('themeBtn');
+      if (btn) btn.textContent = document.body.dataset.theme === 'light' ? '🌙 Scuro' : '☀ Chiaro';
+    }
 
-    function getTagColorById(id) { return TAG_COLORS.find(c => c.id === id) || TAG_COLORS[0]; }
+    // ── ACTIVITY LOG ───────────────────────────────────────
+    function addLog(text) {
+      const now  = new Date();
+      const time = now.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }) + ' ' +
+                   now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      activityLog.unshift({ text, time });
+      if (activityLog.length > 50) activityLog.length = 50;
+      renderLog();
+    }
+    function renderLog() {
+      const list = document.getElementById('logList');
+      if (!list) return;
+      list.innerHTML = activityLog.length
+        ? activityLog.map(e => `<div class="log-entry"><span class="log-time">${esc(e.time)}</span><span class="log-text">${esc(e.text)}</span></div>`).join('')
+        : '<div class="log-empty">Nessuna attività registrata.</div>';
+    }
+    function toggleLog() { document.getElementById('logDrawer').classList.toggle('open'); }
 
-    function buildSwatches() {
-      const container = document.getElementById('colorSwatches');
-      container.innerHTML = '';
-      TAG_COLORS.forEach(c => {
-        const s = document.createElement('div');
-        s.dataset.colorId = c.id;
-        s.title = c.id;
-        s.style.cssText = `width:16px;height:16px;border-radius:50%;cursor:pointer;background:${c.id==='none'?'#222':c.color};border:2px solid ${selectedTagColor===c.id?'#fff':'transparent'};transition:border-color 0.12s;flex-shrink:0;`;
-        if (c.id === 'none') s.innerHTML = `<svg viewBox="0 0 12 12" width="10" height="10" style="display:block;margin:1px auto"><line x1="2" y1="2" x2="10" y2="10" stroke="#555" stroke-width="1.5"/><line x1="10" y1="2" x2="2" y2="10" stroke="#555" stroke-width="1.5"/></svg>`;
-        s.onclick = () => { selectedTagColor = c.id; buildSwatches(); };
-        container.appendChild(s);
+    // ── ARCHIVE ────────────────────────────────────────────
+    function checkArchive() {
+      let changed = false;
+      const now = Date.now();
+      tasks.forEach(t => {
+        if (t.col === 'done' && !t.archived && t.movedToDoneAt) {
+          if ((now - t.movedToDoneAt) / 86400000 >= ARCHIVE_DAYS) {
+            t.archived = true;
+            changed = true;
+            addLog(`"${t.title}" archiviata automaticamente`);
+          }
+        }
       });
+      return changed;
+    }
+    function openArchive() {
+      const archived = tasks.filter(t => t.archived);
+      const list = document.getElementById('archiveList');
+      list.innerHTML = archived.length
+        ? archived.map(t => `
+            <div class="archive-card">
+              <div class="archive-card-info">
+                <div class="archive-card-title">${esc(t.title)}</div>
+                <div class="archive-card-meta">${[t.createdBy ? 'da ' + esc(t.createdBy) : '', t.createdAt ? esc(t.createdAt) : '', t.desc ? esc(t.desc.slice(0,60)) + (t.desc.length > 60 ? '…' : '') : ''].filter(Boolean).join(' · ')}</div>
+              </div>
+              <button class="btn-restore" onclick="restoreTask('${t.id}')">Ripristina</button>
+            </div>`).join('')
+        : '<div class="archive-empty">Nessuna task archiviata.</div>';
+      document.getElementById('archiveOverlay').classList.add('open');
+    }
+    function closeArchive() { document.getElementById('archiveOverlay').classList.remove('open'); }
+    function closeArchiveOutside(e) { if (e.target === document.getElementById('archiveOverlay')) closeArchive(); }
+    function restoreTask(id) {
+      const t = tasks.find(x => x.id === id);
+      if (t) { t.archived = false; t.col = 'todo'; t.movedToDoneAt = null; addLog(`"${t.title}" ripristinata dall'archivio`); save(); render(); openArchive(); }
     }
 
     // ── FILTERS ────────────────────────────────────────────
@@ -910,74 +686,129 @@
       document.getElementById(val ? 'fp-' + val : 'fp-all').classList.add('active');
       render();
     }
-
     function setFilterAuthor(val) {
       filterAuthor = val;
       document.querySelectorAll('[id^="fa-"]').forEach(b => b.classList.remove('active'));
       document.getElementById(val ? 'fa-' + val.toLowerCase() : 'fa-all').classList.add('active');
       render();
     }
-
-    function applyFilters(colTasks) {
-      return colTasks.filter(t => {
+    function applyFilters(list) {
+      return list.filter(t => {
         if (filterSearch) {
           const q = filterSearch.toLowerCase();
           if (!t.title.toLowerCase().includes(q) && !(t.desc || '').toLowerCase().includes(q)) return false;
         }
         if (filterPriority && t.priority !== filterPriority) return false;
-        if (filterAuthor && t.createdBy !== filterAuthor) return false;
+        if (filterAuthor  && t.createdBy !== filterAuthor)   return false;
         return true;
       });
     }
 
+    // ── TAGS IN MODAL ──────────────────────────────────────
+    function buildTagSwatches() {
+      const c = document.getElementById('tagColorSwatches');
+      if (!c) return;
+      c.innerHTML = '';
+      TAG_COLORS.forEach(tc => {
+        const s = document.createElement('div');
+        s.title = tc.id;
+        s.style.cssText = `width:13px;height:13px;border-radius:50%;cursor:pointer;background:${tc.id==='none'?'#333':tc.color};border:2px solid ${newTagColor===tc.id?'#fff':'transparent'};transition:border-color 0.12s;flex-shrink:0;`;
+        if (tc.id === 'none') s.innerHTML = `<svg viewBox="0 0 12 12" width="9" height="9" style="display:block;margin:1px auto"><line x1="2" y1="2" x2="10" y2="10" stroke="#666" stroke-width="1.5"/><line x1="10" y1="2" x2="2" y2="10" stroke="#666" stroke-width="1.5"/></svg>`;
+        s.onclick = () => { newTagColor = tc.id; buildTagSwatches(); };
+        c.appendChild(s);
+      });
+    }
+    function renderModalTags() {
+      const list   = document.getElementById('modalTagsList');
+      const addRow = document.getElementById('tagAddRow');
+      if (!list) return;
+      list.innerHTML = modalTags.map((tag, i) => {
+        const c = getTagColor(tag.color);
+        return `<div class="modal-tag-pill" style="border-color:${c.color};color:${c.color};">${esc(tag.text)}<button onclick="removeTag(${i})">✕</button></div>`;
+      }).join('');
+      if (addRow) addRow.style.display = modalTags.length >= 3 ? 'none' : 'flex';
+    }
+    function addTag() {
+      const input = document.getElementById('inputTagText');
+      const text  = input.value.trim();
+      if (!text || modalTags.length >= 3) return;
+      modalTags.push({ text, color: newTagColor });
+      input.value = ''; newTagColor = 'none';
+      buildTagSwatches(); renderModalTags();
+    }
+    function removeTag(i) { modalTags.splice(i, 1); renderModalTags(); }
+
     // ── CHECKLIST IN MODAL ─────────────────────────────────
     function renderModalChecklist() {
-      const container = document.getElementById('modalChecklistItems');
-      container.innerHTML = '';
+      const c = document.getElementById('modalChecklistItems');
+      if (!c) return;
+      c.innerHTML = '';
       modalChecklist.forEach((item, i) => {
         const row = document.createElement('div');
         row.className = 'modal-check-row';
         row.innerHTML = `<span>${esc(item.text)}</span><button class="modal-check-del" onclick="removeChecklistItem(${i})">✕</button>`;
-        container.appendChild(row);
+        c.appendChild(row);
       });
     }
-
     function addChecklistItem() {
       const input = document.getElementById('inputCheckItem');
-      const text = input.value.trim();
+      const text  = input.value.trim();
       if (!text) return;
       modalChecklist.push({ text, done: false });
-      input.value = '';
-      renderModalChecklist();
+      input.value = ''; renderModalChecklist();
     }
-
-    function removeChecklistItem(i) {
-      modalChecklist.splice(i, 1);
-      renderModalChecklist();
-    }
-
-    // ── TOGGLE CHECKLIST ITEM ON CARD ──────────────────────
-    function toggleCheck(taskId, itemIndex) {
+    function removeChecklistItem(i) { modalChecklist.splice(i, 1); renderModalChecklist(); }
+    function toggleCheck(taskId, idx) {
       const t = tasks.find(x => x.id === taskId);
-      if (t && t.checklist && t.checklist[itemIndex] !== undefined) {
-        t.checklist[itemIndex].done = !t.checklist[itemIndex].done;
+      if (t && t.checklist && t.checklist[idx] !== undefined) {
+        t.checklist[idx].done = !t.checklist[idx].done;
         save(); render();
       }
     }
 
+    // ── COMMENTS ───────────────────────────────────────────
+    function renderComments(comments) {
+      const list = document.getElementById('commentList');
+      if (!list) return;
+      if (!comments || !comments.length) {
+        list.innerHTML = '<div class="comment-empty">Nessun commento ancora.</div>'; return;
+      }
+      list.innerHTML = comments.map(c => `
+        <div class="comment-item">
+          <div class="comment-header">
+            <span class="comment-author">${esc(c.author)}</span>
+            <span class="comment-time">${esc(c.time)}</span>
+          </div>
+          <div class="comment-text">${esc(c.text)}</div>
+        </div>`).join('');
+    }
+    function addComment() {
+      if (!editingId) return;
+      const text = document.getElementById('inputComment').value.trim();
+      if (!text) return;
+      const t = tasks.find(x => x.id === editingId);
+      if (!t) return;
+      if (!t.comments) t.comments = [];
+      const now  = new Date();
+      const time = now.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }) + ' ' +
+                   now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      const author = document.getElementById('inputCreatedBy').value || 'Anonimo';
+      t.comments.push({ author, text, time });
+      document.getElementById('inputComment').value = '';
+      addLog(`${author} ha commentato su "${t.title}"`);
+      save(); renderComments(t.comments);
+    }
+
     // ── CONFIRM DELETE ─────────────────────────────────────
-    function confirmDelete(id) {
-      pendingDeleteId = id;
-      document.getElementById('confirmOverlay').classList.add('open');
-    }
-
-    function closeConfirm() {
-      pendingDeleteId = null;
-      document.getElementById('confirmOverlay').classList.remove('open');
-    }
-
+    function confirmDelete(id) { pendingDeleteId = id; document.getElementById('confirmOverlay').classList.add('open'); }
+    function closeConfirm()    { pendingDeleteId = null; document.getElementById('confirmOverlay').classList.remove('open'); }
     function confirmDeleteExec() {
-      if (pendingDeleteId) { tasks = tasks.filter(t => t.id !== pendingDeleteId); save(); render(); }
+      if (pendingDeleteId) {
+        const t = tasks.find(x => x.id === pendingDeleteId);
+        if (t) addLog(`"${t.title}" eliminata`);
+        tasks = tasks.filter(x => x.id !== pendingDeleteId);
+        save(); render();
+      }
       closeConfirm();
     }
 
@@ -990,33 +821,52 @@
     async function save() {
       try {
         setStatus('saving');
-        const data = JSON.stringify(tasks);
+        const data = JSON.stringify({ tasks, activityLog });
         await fetch(JSONBIN_URL, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY, 'X-Bin-Versioning': 'false' },
-          body: JSON.stringify({ tasks })
+          body: data
         });
-        lastSavedHash = data;
-        setStatus('synced');
+        lastSavedHash = data; setStatus('synced');
       } catch (e) { console.warn('save error', e); setStatus('error'); }
     }
 
     async function load() {
       try {
-        const res  = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
-        const json = await res.json();
-        tasks = json.record?.tasks || [];
-        lastSavedHash = JSON.stringify(tasks);
-      } catch (e) { tasks = []; }
+        const res    = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
+        const json   = await res.json();
+        const record = json.record || {};
+        tasks       = (record.tasks || []).map(migrateTask);
+        activityLog = record.activityLog || [];
+        lastSavedHash = JSON.stringify({ tasks, activityLog });
+        renderLog();
+      } catch (e) { tasks = []; activityLog = []; }
     }
 
     async function pollRemote() {
       try {
         const res    = await fetch(JSONBIN_URL + '/latest', { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
         const json   = await res.json();
-        const remote = JSON.stringify(json.record?.tasks || []);
-        if (remote !== lastSavedHash) { tasks = json.record?.tasks || []; lastSavedHash = remote; render(); }
+        const record = json.record || {};
+        const remote = JSON.stringify({ tasks: record.tasks || [], activityLog: record.activityLog || [] });
+        if (remote !== lastSavedHash) {
+          tasks = (record.tasks || []).map(migrateTask);
+          activityLog = record.activityLog || [];
+          lastSavedHash = remote;
+          renderLog(); render();
+        }
       } catch (e) {}
+    }
+
+    // Migra da formato vecchio (tag singolo) a nuovo (tags array)
+    function migrateTask(t) {
+      if (!t.tags) {
+        t.tags = t.tag ? [{ text: t.tag, color: t.tagColor || 'none' }] : [];
+        delete t.tag; delete t.tagColor;
+      }
+      if (!t.comments)  t.comments  = [];
+      if (!t.checklist) t.checklist = [];
+      return t;
     }
 
     function esc(s) {
@@ -1025,15 +875,19 @@
 
     // ── RENDER ─────────────────────────────────────────────
     function render() {
+      if (checkArchive()) save();
+
       COLS.forEach(col => {
         const container = document.getElementById('cards-' + col);
-        const allColTasks  = tasks.filter(t => t.col === col);
-        const colTasks     = applyFilters(allColTasks);
-        document.getElementById('count-' + col).textContent = allColTasks.length;
+        const allCol    = tasks.filter(t => t.col === col && !t.archived);
+        const filtered  = applyFilters(allCol);
+        document.getElementById('count-' + col).textContent = allCol.length;
         container.innerHTML = '';
-        if (colTasks.length === 0) { container.innerHTML = '<div class="empty-col">Nessuna task</div>'; return; }
+        if (!filtered.length) { container.innerHTML = '<div class="empty-col">Nessuna task</div>'; return; }
 
-        colTasks.forEach(t => {
+        const priorityLabel = { alta: 'Alta', media: 'Media', bassa: 'Bassa' };
+
+        filtered.forEach(t => {
           const card = document.createElement('div');
           card.className = 'card';
           card.draggable = true;
@@ -1042,34 +896,36 @@
           card.ondragend   = onDragEnd;
           card.ondblclick  = () => openModal(t.col, t.id);
 
-          const tagC = getTagColorById(t.tagColor || 'none');
-          const priorityLabels = { alta: 'Alta', media: 'Media', bassa: 'Bassa' };
+          const tagsHtml = (t.tags && t.tags.length)
+            ? `<div class="card-tags">${t.tags.map(tag => {
+                const c = getTagColor(tag.color);
+                return `<span class="card-tag" style="color:${c.color};background:${c.bg};border-color:${c.id==='none'?'var(--border-m)':c.color}">${esc(tag.text)}</span>`;
+              }).join('')}</div>` : '';
 
           const checklistHtml = (t.checklist && t.checklist.length)
             ? `<div class="card-checklist">${t.checklist.map((item, i) =>
-                `<div class="check-item${item.done ? ' done' : ''}" onclick="event.stopPropagation();toggleCheck('${t.id}',${i})">
-                  <div class="check-box">${item.done ? '✓' : ''}</div>
+                `<div class="check-item${item.done?' done':''}" onclick="event.stopPropagation();toggleCheck('${t.id}',${i})">
+                  <div class="check-box">${item.done?'✓':''}</div>
                   <span class="check-text">${esc(item.text)}</span>
-                </div>`).join('')}</div>`
-            : '';
+                </div>`).join('')}</div>` : '';
 
           const linkHtml = t.link
-            ? `<a href="${esc(t.link)}" target="_blank" class="card-link" onclick="event.stopPropagation()">🔗 ${esc(t.link.replace(/^https?:\/\//, ''))}</a>`
-            : '';
+            ? `<a href="${esc(t.link)}" target="_blank" class="card-link" onclick="event.stopPropagation()">🔗 ${esc(t.link.replace(/^https?:\/\//,''))}</a>` : '';
+
+          const commentsHint = (t.comments && t.comments.length)
+            ? `<div class="card-comments-hint">💬 ${t.comments.length} comment${t.comments.length > 1 ? 'i' : 'o'}</div>` : '';
 
           card.innerHTML = `
             <div class="card-header-row">
               <div class="card-title">${esc(t.title)}</div>
-              ${t.priority ? `<span class="priority-badge priority-${t.priority}">${priorityLabels[t.priority]}</span>` : ''}
+              ${t.priority ? `<span class="priority-badge priority-${t.priority}">${priorityLabel[t.priority]}</span>` : ''}
             </div>
             ${t.desc ? `<div class="card-desc">${esc(t.desc)}</div>` : ''}
-            ${checklistHtml}
-            ${linkHtml}
+            ${tagsHtml}${checklistHtml}${linkHtml}${commentsHint}
             <div class="card-footer">
               <div class="card-footer-left">
-                ${t.tag ? `<span class="card-tag" style="color:${tagC.color};background:${tagC.bg};border-color:${tagC.id==='none'?'#333':tagC.color}">${esc(t.tag)}</span>` : '<span></span>'}
-                ${t.createdBy ? `<span class="card-meta-text">da ${esc(t.createdBy)}</span>` : ''}
-                ${t.assignedTo ? `<span class="card-meta-text" style="color:#888;">→ ${esc(t.assignedTo)}</span>` : ''}
+                ${t.createdBy  ? `<span class="card-meta-text">da ${esc(t.createdBy)}</span>` : ''}
+                ${t.assignedTo ? `<span class="card-meta-text" style="color:var(--tm);">→ ${esc(t.assignedTo)}</span>` : ''}
               </div>
               <div class="card-footer-right">
                 ${t.createdAt ? `<span class="card-date">Creata il: ${esc(t.createdAt)}</span>` : ''}
@@ -1084,10 +940,12 @@
       });
     }
 
-    // ── MODAL OPEN/CLOSE ────────────────────────────────────
+    // ── MODAL ──────────────────────────────────────────────
     function openModal(col, id) {
       editingId = id || null;
       document.getElementById('modalTitle').textContent = id ? 'Modifica Task' : 'Nuova Task';
+      const commSect = document.getElementById('commentsSection');
+
       if (id) {
         const t = tasks.find(x => x.id === id);
         document.getElementById('inputTitle').value      = t.title;
@@ -1096,10 +954,12 @@
         document.getElementById('inputPriority').value   = t.priority || '';
         document.getElementById('inputCreatedBy').value  = t.createdBy || 'Davi';
         document.getElementById('inputAssignedTo').value = t.assignedTo || '';
-        document.getElementById('inputTag').value        = t.tag || '';
         document.getElementById('inputLink').value       = t.link || '';
-        selectedTagColor = t.tagColor || 'none';
-        modalChecklist = (t.checklist || []).map(c => ({ ...c }));
+        modalChecklist = (t.checklist || []).map(c => ({...c}));
+        modalTags      = (t.tags || []).map(tg => ({...tg}));
+        commSect.style.display = 'block';
+        renderComments(t.comments || []);
+        document.getElementById('inputComment').value = '';
       } else {
         document.getElementById('inputTitle').value      = '';
         document.getElementById('inputDesc').value       = '';
@@ -1107,13 +967,12 @@
         document.getElementById('inputPriority').value   = '';
         document.getElementById('inputCreatedBy').value  = 'Davi';
         document.getElementById('inputAssignedTo').value = '';
-        document.getElementById('inputTag').value        = '';
         document.getElementById('inputLink').value       = '';
-        selectedTagColor = 'none';
-        modalChecklist = [];
+        modalChecklist = []; modalTags = [];
+        commSect.style.display = 'none';
       }
-      renderModalChecklist();
-      buildSwatches();
+      newTagColor = 'none';
+      renderModalChecklist(); renderModalTags(); buildTagSwatches();
       document.getElementById('modalOverlay').classList.add('open');
       setTimeout(() => document.getElementById('inputTitle').focus(), 150);
     }
@@ -1135,20 +994,28 @@
       const priority   = document.getElementById('inputPriority').value;
       const createdBy  = document.getElementById('inputCreatedBy').value;
       const assignedTo = document.getElementById('inputAssignedTo').value;
-      const tag        = document.getElementById('inputTag').value.trim();
-      const tagColor   = selectedTagColor;
       const link       = document.getElementById('inputLink').value.trim();
-      const checklist  = modalChecklist.map(c => ({ ...c }));
+      const checklist  = modalChecklist.map(c => ({...c}));
+      const tags       = modalTags.map(tg => ({...tg}));
 
       if (editingId) {
-        Object.assign(tasks.find(x => x.id === editingId), { title, col, desc, priority, createdBy, assignedTo, tag, tagColor, link, checklist });
+        const prev    = tasks.find(x => x.id === editingId);
+        const prevCol = prev.col;
+        Object.assign(prev, { title, col, desc, priority, createdBy, assignedTo, link, checklist, tags });
+        if (col !== prevCol) {
+          addLog(`${createdBy} ha spostato "${title}" in ${colName(col)}`);
+          prev.movedToDoneAt = col === 'done' ? Date.now() : null;
+        }
       } else {
         const now = new Date();
         const createdAt = now.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        tasks.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), title, col, desc, priority, createdBy, assignedTo, tag, tagColor, link, checklist, createdAt });
+        tasks.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2), title, col, desc, priority, createdBy, assignedTo, link, checklist, tags, createdAt, comments: [], movedToDoneAt: col === 'done' ? Date.now() : null });
+        addLog(`${createdBy} ha creato "${title}"`);
       }
       save(); render(); closeModal();
     }
+
+    function colName(col) { return { todo: 'Da Fare', inprogress: 'In Corso', test: 'Test', done: 'Fatto' }[col] || col; }
 
     // ── DRAG & DROP ─────────────────────────────────────────
     function onDragStart(e, id) {
@@ -1161,23 +1028,45 @@
       document.querySelectorAll('.column.drag-over').forEach(c => c.classList.remove('drag-over'));
       draggedId = null;
     }
-    function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function onDragOver(e)  { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
     function onDragLeave(e) { if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.classList.remove('drag-over'); }
     function onDrop(e) {
       e.preventDefault();
       const col = e.currentTarget.dataset.col;
-      if (draggedId && col) { const t = tasks.find(x => x.id === draggedId); if (t) { t.col = col; save(); render(); } }
+      if (draggedId && col) {
+        const t = tasks.find(x => x.id === draggedId);
+        if (t && t.col !== col) {
+          const prevCol = t.col; t.col = col;
+          t.movedToDoneAt = col === 'done' ? Date.now() : null;
+          addLog(`"${t.title}" spostata in ${colName(col)}`);
+          save(); render();
+        }
+      }
       e.currentTarget.classList.remove('drag-over');
     }
 
     // ── KEYBOARD ────────────────────────────────────────────
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') { closeModal(); closeConfirm(); }
-      if (e.key === 'Enter' && document.getElementById('modalOverlay').classList.contains('open') && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.id !== 'inputCheckItem') saveTask();
-      if (e.key === 'n' && !document.getElementById('modalOverlay').classList.contains('open') && document.activeElement.tagName === 'BODY') openModal();
+      const modalOpen = document.getElementById('modalOverlay').classList.contains('open');
+      const notSpecialInput = !['TEXTAREA'].includes(document.activeElement.tagName) &&
+                              !['inputCheckItem','inputTagText','inputComment'].includes(document.activeElement.id);
+      if (e.key === 'Enter' && modalOpen && notSpecialInput) saveTask();
+      if (e.key === 'n' && !modalOpen && document.activeElement.tagName === 'BODY') openModal();
     });
 
+    // ── STATUS ──────────────────────────────────────────────
+    function setStatus(state) {
+      const el = document.getElementById('syncStatus');
+      if (!el) return;
+      if (state === 'loading') { el.textContent = '○ Caricamento...';   el.style.color = 'var(--tm)'; }
+      else if (state === 'synced') { el.textContent = '● Live';          el.style.color = '#6ab882'; }
+      else if (state === 'saving') { el.textContent = '◌ Salvataggio...'; el.style.color = '#c9a84c'; }
+      else if (state === 'error')  { el.textContent = '✕ Errore sync';   el.style.color = '#d47a7a'; }
+    }
+
     // ── INIT ────────────────────────────────────────────────
+    initTheme();
     (async () => {
       setStatus('loading');
       await load();
@@ -1185,16 +1074,6 @@
       setStatus('synced');
       setInterval(pollRemote, 3000);
     })();
-
-    function setStatus(state) {
-      const el = document.getElementById('syncStatus');
-      if (!el) return;
-      if (state === 'loading') { el.textContent = '○ Caricamento...'; el.style.color = '#555'; }
-      else if (state === 'synced')  { el.textContent = '● Live';          el.style.color = '#6ab882'; }
-      else if (state === 'saving')  { el.textContent = '◌ Salvataggio...'; el.style.color = '#c9a84c'; }
-      else if (state === 'error')   { el.textContent = '✕ Errore sync';   el.style.color = '#d47a7a'; }
-    }
   </script>
 </body>
-
 </html>
