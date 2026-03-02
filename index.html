@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Steelboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;700;900&family=Cormorant+SC:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;700;900&family=Cormorant+SC:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     /* ── CSS VARIABLES ───────────────────────────────────── */
     :root {
@@ -135,6 +135,98 @@
     .filter-chip.chip-media.active { border-color: #c9a84c; color: #c9a84c; background: rgba(201,168,76,0.1); }
     .filter-chip.chip-bassa.active { border-color: #6ab882; color: #6ab882; background: rgba(58,122,80,0.1); }
 
+    /* ── SPRINT PANEL ───────────────────────────────────── */
+    .sprint-panel {
+      border-bottom: 1px solid var(--border-xs);
+      background: var(--bg-subtle);
+    }
+    .sprint-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.5rem 2.5rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.12s;
+    }
+    .sprint-header:hover { background: var(--bg-surface); }
+    .sprint-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.53rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--tf);
+      margin-right: 0.7rem;
+    }
+    .sprint-week {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--t2);
+    }
+    .sprint-toggle {
+      font-size: 0.55rem;
+      color: var(--tm);
+      transition: transform 0.2s;
+    }
+    .sprint-panel:not(.collapsed) .sprint-toggle { transform: rotate(90deg); }
+    .sprint-body {
+      display: flex;
+      gap: 0;
+      border-top: 1px solid var(--border-xs);
+      overflow: hidden;
+    }
+    .sprint-panel.collapsed .sprint-body { display: none; }
+    .sprint-col {
+      flex: 1;
+      padding: 0.55rem 1.2rem 0.65rem;
+      border-right: 1px solid var(--border-xs);
+    }
+    .sprint-col:last-child { border-right: none; }
+    .sprint-col-name {
+      font-family: 'Cinzel', serif;
+      font-size: 0.48rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .sprint-col[data-col="todo"]       .sprint-col-name { color: #4a7fb5; }
+    .sprint-col[data-col="inprogress"] .sprint-col-name { color: #c9a84c; }
+    .sprint-col[data-col="test"]       .sprint-col-name { color: #9b7ec8; }
+    .sprint-col[data-col="done"]       .sprint-col-name { color: #6ab882; }
+    .sprint-task-list { display: flex; flex-direction: column; gap: 0.22rem; }
+    .sprint-task-item {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--t2);
+      padding: 0.08rem 0;
+      line-height: 1.4;
+    }
+    .sprint-task-item::before { content: '· '; color: var(--tm); }
+    .sprint-empty {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      color: var(--tm);
+      font-style: italic;
+    }
+
+    /* ── DEVLOG BUTTON ───────────────────────────────────── */
+    .col-devlog-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem;
+      background: transparent;
+      border: 1px solid var(--border-m);
+      color: #3a7a50;
+      width: 20px;
+      height: 20px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      border-radius: 2px;
+      margin-right: 0.3rem;
+      flex-shrink: 0;
+    }
+    .col-devlog-btn:hover { border-color: #3a7a50; background: rgba(58,122,80,0.12); color: #6ab882; }
+
     /* ── BOARD ──────────────────────────────────────────── */
     .board {
       display: grid;
@@ -211,14 +303,14 @@
     .card.dragging { opacity: 0.3; cursor: grabbing; }
 
     .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.32rem; }
-    .card-title { font-family: 'Cinzel', serif; font-weight: 700; font-size: 0.76rem; line-height: 1.5; letter-spacing: 0.04em; color: var(--t1); word-break: break-word; flex: 1; }
+    .card-title { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.8rem; line-height: 1.45; letter-spacing: 0; color: var(--t1); word-break: break-word; flex: 1; }
 
     .priority-badge { font-family: 'Cinzel', serif; font-size: 0.49rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.09rem 0.36rem; border-radius: 2px; flex-shrink: 0; }
     .priority-alta  { color: #d47a7a; border: 1px solid rgba(212,122,122,0.5); background: rgba(180,60,60,0.12); }
     .priority-media { color: #c9a84c; border: 1px solid rgba(201,168,76,0.5);  background: rgba(201,168,76,0.12); }
     .priority-bassa { color: #6ab882; border: 1px solid rgba(106,184,130,0.5); background: rgba(58,122,80,0.12); }
 
-    .card-desc { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.87rem; color: var(--t2); line-height: 1.5; word-break: break-word; margin-bottom: 0.42rem; }
+    .card-desc { font-family: 'Inter', sans-serif; font-style: normal; font-size: 0.79rem; color: var(--t2); line-height: 1.55; word-break: break-word; margin-bottom: 0.42rem; }
 
     /* TAGS */
     .card-tags { display: flex; flex-wrap: wrap; gap: 0.22rem; margin-bottom: 0.38rem; }
@@ -229,7 +321,7 @@
     .check-item { display: flex; align-items: center; gap: 0.38rem; cursor: pointer; padding: 0.1rem 0; }
     .check-box { width: 11px; height: 11px; border: 1px solid var(--border-s); display: flex; align-items: center; justify-content: center; font-size: 0.48rem; flex-shrink: 0; transition: background 0.1s, border-color 0.1s; }
     .check-item.done .check-box { background: #3a7a50; border-color: #3a7a50; color: #fff; }
-    .check-text { font-family: 'IM Fell English', serif; font-size: 0.81rem; color: var(--t3); }
+    .check-text { font-family: 'Inter', sans-serif; font-size: 0.76rem; color: var(--t3); }
     .check-item.done .check-text { text-decoration: line-through; color: var(--tm); }
 
     /* LINK */
@@ -424,6 +516,18 @@
     </div>
   </div>
 
+  <!-- SPRINT PANEL -->
+  <div class="sprint-panel collapsed" id="sprint-panel">
+    <div class="sprint-header" onclick="toggleSprint()">
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <span class="sprint-label">Sprint</span>
+        <span class="sprint-week" id="sprint-week-label"></span>
+      </div>
+      <span class="sprint-toggle" id="sprint-toggle">▶</span>
+    </div>
+    <div class="sprint-body" id="sprint-body"></div>
+  </div>
+
   <!-- BOARD -->
   <div class="board" id="board">
     <div class="column" data-col="todo" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
@@ -450,7 +554,7 @@
     <div class="column" data-col="done" ondragover="onDragOver(event)" ondrop="onDrop(event)" ondragleave="onDragLeave(event)">
       <div class="column-header">
         <div class="column-title-wrap"><div class="col-line"></div><span class="column-name">Fatto</span></div>
-        <div class="col-header-right"><span class="column-count" id="count-done">0</span><button class="col-add-btn" onclick="openModal('done')">+</button></div>
+        <div class="col-header-right"><span class="column-count" id="count-done">0</span><button class="col-devlog-btn" onclick="downloadDevlog()" title="Download Devlog .md">↓</button><button class="col-add-btn" onclick="openModal('done')">+</button></div>
       </div>
       <div class="cards-container" id="cards-done"></div>
     </div>
@@ -876,6 +980,7 @@
     // ── RENDER ─────────────────────────────────────────────
     function render() {
       if (checkArchive()) save();
+      renderSprint();
 
       COLS.forEach(col => {
         const container = document.getElementById('cards-' + col);
@@ -938,6 +1043,99 @@
           container.appendChild(card);
         });
       });
+    }
+
+    // ── SPRINT PANEL ───────────────────────────────────────
+    function getWeekNumber(d) {
+      const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+      return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    }
+    function getWeekRange() {
+      const now = new Date();
+      const day = now.getDay() || 7; // ISO: 1=Mon, 7=Sun
+      const mon = new Date(now); mon.setDate(now.getDate() - day + 1);
+      const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+      const fmt = d => d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
+      return { mon, sun, label: `Sett. ${getWeekNumber(now)} · ${fmt(mon)} – ${fmt(sun)}`, year: now.getFullYear() };
+    }
+    function renderSprint() {
+      const wr = getWeekRange();
+      const lbl = document.getElementById('sprint-week-label');
+      if (lbl) lbl.textContent = wr.label;
+      const body = document.getElementById('sprint-body');
+      if (!body) return;
+      const activeCols = ['todo', 'inprogress', 'test', 'done'];
+      const colColors  = { todo: '#4a7fb5', inprogress: '#c9a84c', test: '#9b7ec8', done: '#3a7a50' };
+      const colLabels  = { todo: 'Da Fare', inprogress: 'In Corso', test: 'Test', done: 'Fatto' };
+      body.innerHTML = activeCols.map(col => {
+        const colTasks = tasks.filter(t => t.col === col && !t.archived);
+        const items = colTasks.length
+          ? colTasks.map(t => `<div class="sprint-task-item">${esc(t.title)}</div>`).join('')
+          : `<div class="sprint-empty">—</div>`;
+        return `<div class="sprint-col" data-col="${col}">
+          <div class="sprint-col-name">${colLabels[col]}</div>
+          <div class="sprint-task-list">${items}</div>
+        </div>`;
+      }).join('');
+    }
+    function toggleSprint() {
+      document.getElementById('sprint-panel').classList.toggle('collapsed');
+      renderSprint();
+    }
+
+    // ── DEVLOG DOWNLOAD ─────────────────────────────────────
+    function downloadDevlog() {
+      const wr = getWeekRange();
+      const doneTasks = tasks.filter(t => t.col === 'done' && !t.archived);
+      const priLabel = { alta: 'Alta', media: 'Media', bassa: 'Bassa', '': '—' };
+      let md = `# Steelborne Devlog — Settimana ${getWeekNumber(wr.mon)} (${wr.mon.toLocaleDateString('it-IT')} – ${wr.sun.toLocaleDateString('it-IT')})\n\n`;
+      md += `> Generato il ${new Date().toLocaleDateString('it-IT', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}\n\n`;
+      md += `---\n\n`;
+      if (!doneTasks.length) {
+        md += `*Nessuna task completata al momento.*\n`;
+      } else {
+        doneTasks.forEach((t, i) => {
+          md += `## ${i + 1}. ${t.title}\n\n`;
+          md += `**Priorità:** ${priLabel[t.priority] || '—'}`;
+          if (t.createdBy)  md += ` | **Creata da:** ${t.createdBy}`;
+          if (t.assignedTo) md += ` | **Assegnata a:** ${t.assignedTo}`;
+          if (t.createdAt)  md += ` | **Data:** ${t.createdAt}`;
+          md += `\n\n`;
+          if (t.desc) {
+            md += `### Descrizione\n${t.desc}\n\n`;
+          }
+          if (t.tags && t.tags.length) {
+            md += `### Tag\n${t.tags.map(tg => `\`${tg.text}\``).join(' ')}\n\n`;
+          }
+          if (t.checklist && t.checklist.length) {
+            md += `### Checklist\n`;
+            t.checklist.forEach(item => {
+              md += `- [${item.done ? 'x' : ' '}] ${item.text}\n`;
+            });
+            md += `\n`;
+          }
+          if (t.link) {
+            md += `### Link\n${t.link}\n\n`;
+          }
+          if (t.comments && t.comments.length) {
+            md += `### Commenti\n`;
+            t.comments.forEach(c => {
+              md += `**${c.author}** _(${c.time})_: ${c.text}\n\n`;
+            });
+          }
+          md += `---\n\n`;
+        });
+      }
+      const wn   = String(getWeekNumber(wr.mon)).padStart(2, '0');
+      const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `Steelborne_Devlog_W${wn}_${wr.year}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
     }
 
     // ── MODAL ──────────────────────────────────────────────
@@ -1067,6 +1265,10 @@
 
     // ── INIT ────────────────────────────────────────────────
     initTheme();
+    // Imposta subito il label della settimana corrente
+    const _wr = getWeekRange();
+    const _lbl = document.getElementById('sprint-week-label');
+    if (_lbl) _lbl.textContent = _wr.label;
     (async () => {
       setStatus('loading');
       await load();
