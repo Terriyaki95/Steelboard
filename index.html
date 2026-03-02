@@ -343,6 +343,9 @@
     .card-btn:hover { color: var(--t1); }
     .card-btn.delete:hover { color: #c04040; }
 
+    .card.drop-before { box-shadow: 0 -2px 0 #c9a84c; }
+    .card.drop-after  { box-shadow: 0  2px 0 #c9a84c; }
+
     .empty-col { font-family: 'IM Fell English', serif; font-style: italic; color: var(--tf); font-size: 0.85rem; text-align: center; padding: 2.5rem 1rem; }
 
     /* ── MODAL ───────────────────────────────────────────── */
@@ -695,6 +698,7 @@
 
     let tasks = [], activityLog = [];
     let editingId = null, draggedId = null;
+    let dragOverCardId = null, dragOverPos = 'after';
     let filterSearch = '', filterPriority = '', filterAuthor = '';
     let pendingDeleteId = null;
     let modalChecklist = [], modalTags = [], newTagColor = 'none';
@@ -998,6 +1002,8 @@
           card.dataset.id = t.id;
           card.ondragstart = e => onDragStart(e, t.id);
           card.ondragend   = onDragEnd;
+          card.ondragover  = e => onCardDragOver(e, t.id);
+          card.ondrop      = e => onCardDrop(e, t.id);
           card.ondblclick  = () => openModal(t.col, t.id);
 
           const tagsHtml = (t.tags && t.tags.length)
@@ -1223,10 +1229,57 @@
     function onDragEnd() {
       document.querySelectorAll('.card.dragging').forEach(c => c.classList.remove('dragging'));
       document.querySelectorAll('.column.drag-over').forEach(c => c.classList.remove('drag-over'));
+      clearDropIndicators();
+      dragOverCardId = null;
       draggedId = null;
     }
+    function clearDropIndicators() {
+      document.querySelectorAll('.card.drop-before, .card.drop-after').forEach(c => {
+        c.classList.remove('drop-before', 'drop-after');
+      });
+    }
+    function onCardDragOver(e, id) {
+      e.preventDefault();
+      e.stopPropagation();
+      const rect = e.currentTarget.getBoundingClientRect();
+      const pos  = e.clientY < rect.top + rect.height / 2 ? 'before' : 'after';
+      if (dragOverCardId !== id || dragOverPos !== pos) {
+        clearDropIndicators();
+        dragOverCardId = id;
+        dragOverPos    = pos;
+        if (id !== draggedId) e.currentTarget.classList.add('drop-' + pos);
+      }
+      e.currentTarget.closest('.column')?.classList.add('drag-over');
+    }
+    function onCardDrop(e, id) {
+      e.preventDefault();
+      e.stopPropagation();
+      const pos = dragOverPos;
+      clearDropIndicators();
+      if (!draggedId || draggedId === id) { dragOverCardId = null; return; }
+      const dragged = tasks.find(x => x.id === draggedId);
+      const target  = tasks.find(x => x.id === id);
+      if (!dragged || !target) return;
+      const prevCol = dragged.col;
+      tasks = tasks.filter(x => x.id !== draggedId);
+      const targetIdx = tasks.findIndex(x => x.id === id);
+      dragged.col = target.col;
+      if (dragged.col !== prevCol) {
+        dragged.movedToDoneAt = dragged.col === 'done' ? Date.now() : null;
+        addLog(`"${dragged.title}" spostata in ${colName(dragged.col)}`);
+      }
+      tasks.splice(pos === 'before' ? targetIdx : targetIdx + 1, 0, dragged);
+      dragOverCardId = null;
+      save(); render();
+    }
     function onDragOver(e)  { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
-    function onDragLeave(e) { if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.classList.remove('drag-over'); }
+    function onDragLeave(e) {
+      if (!e.currentTarget.contains(e.relatedTarget)) {
+        e.currentTarget.classList.remove('drag-over');
+        clearDropIndicators();
+        dragOverCardId = null;
+      }
+    }
     function onDrop(e) {
       e.preventDefault();
       const col = e.currentTarget.dataset.col;
