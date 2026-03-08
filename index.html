@@ -1141,6 +1141,13 @@
       a.download = `Steelborne_Devlog_W${wn}_${wr.year}.md`;
       a.click();
       URL.revokeObjectURL(url);
+
+      if (doneTasks.length) {
+        doneTasks.forEach(t => { t.archived = true; });
+        addLog(`Devlog scaricato — ${doneTasks.length} task archiviate dalla colonna Fatto`);
+        save();
+        render();
+      }
     }
 
     // ── MODAL ──────────────────────────────────────────────
